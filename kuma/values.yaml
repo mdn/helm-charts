@@ -1,0 +1,48 @@
+# Default values for kuma.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+image:
+  repository: quay.io/mozmar/kuma
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  enable: true
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 8000
+
+command: gunicorn
+
+args:
+  - "-w=4"
+  - "--bind=0.0.0.0"
+  - "--access-logfile=-"
+  - "--timeout=120"
+  - "kuma.wsgi:application"
+
+livenessProbe:
+  httpGet:
+    path: /contribute.json
+    port: 8000
+  initialDelaySeconds: 20
+  periodSeconds: 3
+
+readinessProbe:
+  httpGet:
+    path: /en-US
+    port: 8000
+  initialDelaySeconds: 20
+  periodSeconds: 3
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+debug: "False"
+debug_toolbar: "False"
+allowed_hosts: "*"
+maintenance_mode: "False"

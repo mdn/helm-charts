@@ -1,0 +1,22 @@
+# Default values for elasticsearch.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+name: elasticsearch
+
+replicaCount: 1
+
+image:
+  repository: elasticsearch
+  tag: 1.7
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+
+resources:
+  limits:
+    cpu: 1
+    memory: 2Gi
+  requests:
+    cpu: 1
+    memory: 2Gi

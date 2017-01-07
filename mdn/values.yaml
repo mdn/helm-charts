@@ -1,0 +1,29 @@
+# Default values for MDN.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+redis:
+  redisPassword: kuma
+  persistence:
+    # This is required, at least for a minikube cluster, to avoid this issue:
+    #     https://github.com/kubernetes/charts/issues/228
+    enabled: false
+
+mysql:
+  persistence:
+    enabled: false
+  mysqlUser: root
+  mysqlPassword: kuma
+  mysqlRootPassword: kuma
+  mysqlDatabase: developer_mozilla_org
+
+kuma_api:
+  kuma:
+    brokerPassword: kuma
+
+kuma_web:
+  kuma:
+    brokerPassword: kuma
+
+worker:
+  kuma:
+    brokerPassword: kuma

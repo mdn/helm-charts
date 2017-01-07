@@ -1,0 +1,4 @@
+dependencies:
+  - name: kuma
+    version: 0.1.0
+    repository: http://localhost:8879/charts

@@ -1,0 +1,7 @@
+# Default values for the Kuma API service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+kuma:
+  name: api
+  livenessProbe: false
+  readinessProbe: false

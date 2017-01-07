@@ -1,0 +1,18 @@
+# Default values for the Kuma worker service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+kuma:
+  name: worker
+  command: ./manage.py
+  args:
+    - celery
+    - worker
+    - "--events"
+    - "--beat"
+    - "--autoreload"
+    - "--concurrency=4"
+    - "-Q mdn_purgeable,mdn_search,mdn_emails,mdn_wiki,celery"
+  service:
+    enable: false
+  livenessProbe: false
+  readinessProbe: false

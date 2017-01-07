@@ -1,0 +1,25 @@
+dependencies:
+  - name: worker
+    version: 0.1.0
+    repository: http://localhost:8879/charts
+  - name: kuma_api
+    version: 0.1.0
+    repository: http://localhost:8879/charts
+  - name: kuma_web
+    version: 0.1.0
+    repository: http://localhost:8879/charts
+  - name: kumascript
+    version: 0.1.0
+    repository: http://localhost:8879/charts
+  - name: elasticsearch
+    version: 0.1.0
+    repository: http://localhost:8879/charts
+  - name: mysql
+    version: 0.1.0
+    repository: http://localhost:8879/charts
+  - name: redis
+    version: 0.4.2
+    repository: https://kubernetes-charts.storage.googleapis.com
+  - name: memcached
+    version: 0.4.0
+    repository: https://kubernetes-charts.storage.googleapis.com
