@@ -44,7 +44,7 @@ spec:
             - name: DOMAIN
               value: {{ template "fullname" . }}
             - name: ES_URLS
-              value: {{ if .Values.elasticsearchURL }}{{ .Values.elasticsearchURL | quote }}{{ else }}{{ printf "%s-%s" .Release.Name "elasticsearch" | trunc 24 }}:9200{{ end }}
+              value: {{ if .Values.elasticsearchURL }}{{ .Values.elasticsearchURL | quote }}{{ else }}{{ printf "%s-%s" .Release.Name "elasticsearch" | trunc 63 }}:9200{{ end }}
             - name: KUMASCRIPT_URL_TEMPLATE
               value: http://{{ printf "%s-%s" .Release.Name "kumascript" | trunc 63 }}:9080/docs/{path}
             - name: MEMCACHE_SERVERS
