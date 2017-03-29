@@ -1,0 +1,48 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+        - name: {{ template "fullname" . }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - node
+          args:
+            - run.js
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+          env:
+            - name: log__console
+              value: "true"
+            - name: server__template_root_dir
+              value: macros
+            - name: server__document_url_template
+              value: {{block "kumascript_document_url_template" .}}http://{{ printf "%s-%s" .Release.Name "api" | trunc 63 }}/en-US/docs/{path}?raw=1{{end}}
+            - name: server__memcache__server
+              value: {{block "kumascript_memcached_servers" .}}{{ printf "%s-%s" .Release.Name "memcached" | trunc 63 }}:11211{{end}}
+            - name: server__template_class
+              value: EJSTemplate
+            - name: server__autorequire__mdn
+              value: MDN:Common
+            - name: server__autorequire__Page
+              value: DekiScript:Page
+            - name: server__autorequire__String
+              value: DekiScript:String
+            - name: server__autorequire__Uri
+              value: DekiScript:Uri
+            - name: server__autorequire__Web
+              value: DekiScript:Web
+            - name: server__autorequire__Wiki
+              value: DekiScript:Wiki
+          resources:
+{{ toYaml .Values.resources | indent 12 }}

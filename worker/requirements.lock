@@ -1,0 +1,9 @@
+dependencies:
+- condition: ""
+  enabled: false
+  name: kuma
+  repository: http://localhost:8879/charts
+  tags: null
+  version: 0.1.0
+digest: sha256:6d732966b35eb1a4282870e971a4d6a495760cdaea4021140481713564d9a3dc
+generated: 2017-03-27T16:46:02.548393276-07:00

@@ -1,0 +1,78 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+        - name: {{ template "fullname" . }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - {{ .Values.command | quote }}
+          args:
+            {{- range .Values.args }}
+            - {{ . | quote }}
+            {{- end }}
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+          env:
+            # Django settings overrides:
+            - name: ACCOUNT_DEFAULT_HTTP_PROTOCOL
+              value: http
+            - name: ALLOWED_HOSTS
+              value: {{ .Values.allowed_hosts | quote }}
+            - name: BROKER_URL
+              value: {{ if .Values.brokerURL }}{{ .Values.brokerURL | quote }}{{ else }}redis://{{ if .Values.brokerPassword }}:{{ .Values.brokerPassword }}@{{ end }}{{ printf "%s-%s" .Release.Name "redis" | trunc 63 }}:6379/0{{ end }}
+            - name: CELERY_ALWAYS_EAGER
+              value: "False"
+            - name: CSRF_COOKIE_SECURE
+              value: "False"
+            - name: DATABASE_URL
+              value: {{ if .Values.databaseURL }}{{ .Values.databaseURL | quote }}{{ else }}mysql://{{ default "root" .Values.databaseUser }}:{{ default "kuma" .Values.databasePassword }}@{{ printf "%s-%s" .Release.Name "mysql" | trunc 63 }}:3306/{{ default "developer_mozilla_org" .Values.databaseName }}{{ end }}
+            - name: DEBUG
+              value: {{ .Values.debug | quote }}
+            - name: DEBUG_TOOLBAR
+              value: {{ .Values.debug_toolbar | quote }}
+            - name: DOMAIN
+              value: {{ template "fullname" . }}
+            - name: ES_URLS
+              value: {{ if .Values.elasticsearchURL }}{{ .Values.elasticsearchURL | quote }}{{ else }}{{ printf "%s-%s" .Release.Name "elasticsearch" | trunc 63 }}:9200{{ end }}
+            - name: KUMASCRIPT_URL_TEMPLATE
+              value: http://{{ printf "%s-%s" .Release.Name "kumascript" | trunc 63 }}:9080/docs/{path}
+            - name: MEMCACHE_SERVERS
+              value: {{ if .Values.memcachedURL }}{{ .Values.memcachedURL }}{{ else }}{{ printf "%s-%s" .Release.Name "memcached" | trunc 63 }}:11211{{ end }}
+            - name: PROD_DETAILS_DIR
+              value: /app/product_details_json
+            - name: PROTOCOL
+              value: "http://"
+            - name: SESSION_COOKIE_SECURE
+              value: "False"
+            - name: SITE_URL
+              value: http://{{ template "fullname" . }}{{ if (ne .Values.service.externalPort 80.0) }}:{{ .Values.service.externalPort }}{{ end }}
+            # Other environment overrides
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+            - name: PYTHONUNBUFFERED
+              value: "True"
+            - name: WEB_CONCURRENCY
+              value: "4"
+            - name: MAINTENANCE_MODE
+              value: {{ .Values.maintenance_mode | quote }}
+{{- if .Values.livenessProbe}}
+          livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 12 }}
+{{- end}}
+{{- if .Values.readinessProbe}}
+          readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 12 }}
+{{- end}}
+          resources:
+{{ toYaml .Values.resources | indent 12 -}}

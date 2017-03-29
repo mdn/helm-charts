@@ -1,0 +1,16 @@
+apiVersion: v1
+name: elasticsearch
+version: 0.1.0
+description: >
+  A Kubernetes Helm chart for elasticsearch for the
+  Mozilla Developer Network (MDN).
+home: https://github.com/elastic/elasticsearch
+maintainers:
+  - name: Josh Mize
+    email: jmize@mozilla.com
+  - name: Dave Parfitt
+    email: dparfitt@mozilla.com
+  - name: John Whitlock
+    email: jwhitlock@mozilla.com
+  - name: Ryan Johnson
+    email: rjohnson@mozilla.com
